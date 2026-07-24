@@ -1,21 +1,14 @@
 @baseUrl = http://localhost:8000
 
-###
-
-GET {{baseUrl}}/users?page=1&limit=1
+### Get all users
+GET {{baseUrl}}/users
 Content-Type: application/json
 
-###
+### Create user
 
 POST {{baseUrl}}/users
 Content-Type: application/json
 
 {
-    "name": "John",
-    "email": "abc@example.com"
+    "name": "John"
 }
-
-###
-
-GET {{baseUrl}}/me
-Content-Type: application/json

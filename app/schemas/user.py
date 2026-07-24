@@ -1,5 +1,4 @@
 from pydantic import Field
-from pydantic import EmailStr
 from pydantic import BaseModel
 
 
@@ -9,7 +8,6 @@ class UserCreate(BaseModel):
         max_length=20
     )
     age: int = 18
-    email: EmailStr
 
 
 class UserResponse(BaseModel):

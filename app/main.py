@@ -1,57 +1,10 @@
-from typing import Annotated
-from fastapi import Depends
-from app.schemas.user import UserResponse
 from fastapi import FastAPI
-from app.schemas.user import UserCreate
+from app.database.database import engine, Base
+from app.models.user import User
+from app.api.v1 import user
 
 app = FastAPI()
 
+app.include_router(user.router)
 
-@app.get("/")
-async def root():
-    return {
-        "message": "Hello FastAPI"
-    }
-
-
-@app.get("/users")
-async def get_users(page: int, limit: int):
-    return [
-        {
-            "id": 1,
-            "name": "Phan Anh",
-        },
-        {
-            "id": 2,
-            "name": "John",
-        },
-    ]
-
-
-@app.post("/users", response_model=UserResponse)
-async def create_user(user: UserCreate):
-    return {
-        "id": 1,
-        **user.model_dump()
-    }
-
-
-def get_current_user():
-    return {
-        "id": 1,
-        "name": "Phan Anh",
-        "age": 25,
-    }
-
-
-CurrentUser = Annotated[
-    dict,
-    Depends(get_current_user)
-]
-
-
-@app.get("/me")
-async def get_me(user: CurrentUser):
-    return {
-        "user": user
-    }
+Base.metadata.create_all(bind=engine)

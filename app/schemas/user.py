@@ -1,4 +1,6 @@
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import Field
+from pydantic import EmailStr
+from pydantic import BaseModel
 
 
 class UserCreate(BaseModel):

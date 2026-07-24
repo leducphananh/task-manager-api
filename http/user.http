@@ -2,7 +2,7 @@
 
 ###
 
-GET {{baseUrl}}/users?page=1&limit=abc
+GET {{baseUrl}}/users?page=1&limit=1
 Content-Type: application/json
 
 ###
@@ -14,3 +14,8 @@ Content-Type: application/json
     "name": "John",
     "email": "abc@example.com"
 }
+
+###
+
+GET {{baseUrl}}/me
+Content-Type: application/json

@@ -1,3 +1,5 @@
+from typing import Annotated
+from fastapi import Depends
 from app.schemas.user import UserResponse
 from fastapi import FastAPI
 from app.schemas.user import UserCreate
@@ -31,4 +33,25 @@ async def create_user(user: UserCreate):
     return {
         "id": 1,
         **user.model_dump()
+    }
+
+
+def get_current_user():
+    return {
+        "id": 1,
+        "name": "Phan Anh",
+        "age": 25,
+    }
+
+
+CurrentUser = Annotated[
+    dict,
+    Depends(get_current_user)
+]
+
+
+@app.get("/me")
+async def get_me(user: CurrentUser):
+    return {
+        "user": user
     }

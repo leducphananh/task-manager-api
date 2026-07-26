@@ -1,27 +1,19 @@
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from app.database.database import engine, Base
-from app.models.user import User
 from app.api.v1 import users, auth, products
-from app.exceptions import EmailAlreadyExistsException, InvalidCredentialsException
+from app.exceptions import AppException
 
 app = FastAPI()
 
 
-@app.exception_handler(EmailAlreadyExistsException)
-async def email_already_exists_exception_handler(request: Request, exc: EmailAlreadyExistsException):
+@app.exception_handler(AppException)
+async def app_exception_handler(request: Request, exc: AppException):
     return JSONResponse(
-        status_code=409,
-        content={"detail": str(exc)},
+        status_code=exc.status_code,
+        content={"detail": exc.message},
     )
 
-
-@app.exception_handler(InvalidCredentialsException)
-async def invalid_credentials_exception_handler(request: Request, exc: InvalidCredentialsException):
-    return JSONResponse(
-        status_code=401,
-        content={"detail": str(exc)},
-    )
 
 app.include_router(auth.router)
 app.include_router(users.router)

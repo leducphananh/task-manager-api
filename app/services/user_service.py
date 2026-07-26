@@ -1,9 +1,9 @@
-from app.repositories.user_repository import UserRepository
-from app.schemas.user import UserCreate
-from app.models.user import User
 from app.core.security import hash_password, verify_password
-from app.schemas.user import LoginRequest
-from app.exceptions import InvalidCredentialsException, EmailAlreadyExistsException
+from app.exceptions import (EmailAlreadyExistsException,
+                            InvalidCredentialsException)
+from app.models.user import User
+from app.repositories.user_repository import UserRepository
+from app.schemas.user import LoginRequest, UserCreate
 
 
 class UserService:

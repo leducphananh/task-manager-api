@@ -1,7 +1,8 @@
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
-from app.database.database import engine, Base
-from app.api.v1 import users, auth, products
+
+from app.api.v1 import auth, products, users
+from app.database.database import Base, engine
 from app.exceptions import AppException
 
 app = FastAPI()

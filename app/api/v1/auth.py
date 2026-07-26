@@ -1,6 +1,7 @@
 from fastapi import APIRouter
+
 from app.dependencies.users import UserServiceDep
-from app.schemas.user import UserCreate, UserResponse, LoginRequest
+from app.schemas.user import LoginRequest, UserCreate, UserResponse
 
 router = APIRouter(
     prefix="/auth",

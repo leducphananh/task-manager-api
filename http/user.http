@@ -10,5 +10,6 @@ POST {{baseUrl}}/users
 Content-Type: application/json
 
 {
-    "name": "John"
+    "name": "John",
+    "age": 30
 }

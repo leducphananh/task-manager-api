@@ -8,11 +8,6 @@ router = APIRouter(
 )
 
 
-@router.post("/login")
-async def login():
-    return {}
-
-
 @router.post("/register", response_model=UserResponse)
 async def register(service: UserServiceDep, user: UserCreate):
     return service.register(user)

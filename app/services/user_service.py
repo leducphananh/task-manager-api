@@ -10,7 +10,8 @@ class UserService:
     def register(self, user: UserCreate):
         existing_user = self.repository.find_by_email(user.email)
         if existing_user:
-            raise Exception("User already exists")
+            from app.exceptions import EmailAlreadyExistsException
+            raise EmailAlreadyExistsException()
 
         # hashed_password = hash_password(user.password)
         new_user = User(

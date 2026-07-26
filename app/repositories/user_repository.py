@@ -17,3 +17,7 @@ class UserRepository:
         self.db.commit()
         self.db.refresh(user)
         return user
+
+    def find_by_email(self, email: str):
+        statement = select(User).where(User.email == email)
+        return self.db.scalars(statement).first()

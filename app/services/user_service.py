@@ -1,12 +1,21 @@
 from app.repositories import UserRepository
+from app.schemas.user import UserCreate
+from app.models.user import User
 
 
 class UserService:
     def __init__(self, repository: UserRepository):
         self.repository = repository
 
-    def get_users(self):
-        return self.repository.get_all()
+    def register(self, user: UserCreate):
+        existing_user = self.repository.find_by_email(user.email)
+        if existing_user:
+            raise Exception("User already exists")
 
-    def create_user(self, user):
-        return self.repository.create(user)
+        # hashed_password = hash_password(user.password)
+        new_user = User(
+            name=user.name,
+            email=user.email,
+            password_hash=user.password
+        )
+        return self.repository.create(new_user)

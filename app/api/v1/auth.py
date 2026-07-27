@@ -1,7 +1,8 @@
 from fastapi import APIRouter
 
 from app.dependencies.users import UserServiceDep
-from app.schemas.user import LoginRequest, UserCreate, UserResponse
+from app.schemas.user import (LoginRequest, TokenResponse, UserCreate,
+                              UserResponse)
 
 router = APIRouter(
     prefix="/auth",
@@ -14,6 +15,6 @@ async def register(service: UserServiceDep, user: UserCreate):
     return service.register(user)
 
 
-@router.post("/login", response_model=UserResponse)
+@router.post("/login", response_model=TokenResponse)
 async def login(service: UserServiceDep, login: LoginRequest):
     return service.login(login)

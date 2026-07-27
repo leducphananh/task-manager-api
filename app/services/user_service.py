@@ -1,4 +1,5 @@
-from app.core.security import hash_password, verify_password
+from app.core.security import (create_access_token, hash_password,
+                               verify_password)
 from app.exceptions import (EmailAlreadyExistsException,
                             InvalidCredentialsException)
 from app.models.user import User
@@ -32,4 +33,9 @@ class UserService:
         if not verify_password(login.password, user.password_hash):
             raise InvalidCredentialsException()
 
-        return user
+        token = create_access_token({"sub": str(user.id)})
+
+        return {
+            "access_token": token,
+            "token_type": "bearer",
+        }

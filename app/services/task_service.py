@@ -1,11 +1,18 @@
-from app.models.task import Task
+from app.exceptions import TaskNotFoundException
+from app.models.task import Task, TaskStatus
 from app.repositories.task_repository import TaskRepository
-from app.schemas.task import TaskCreate
+from app.schemas.task import TaskCreate, TaskUpdate
 
 
 class TaskService:
     def __init__(self, repository: TaskRepository):
         self.repository = repository
+
+    def _get_task_or_404(self, task_id: int, user_id: int) -> Task:
+        task = self.repository.get_by_id(task_id, user_id)
+        if not task:
+            raise TaskNotFoundException()
+        return task
 
     def create_task(self, user_id: int, task: TaskCreate):
         new_task = Task(
@@ -21,21 +28,20 @@ class TaskService:
         return self.repository.get_all_by_user_id(user_id)
 
     def get_task_by_id(self, task_id: int, user_id: int):
-        return self.repository.get_by_id(task_id, user_id)
+        return self._get_task_or_404(task_id, user_id)
 
-    def update_task(self, task_id: int, user_id: int, task_in: TaskCreate):
-        task = self.repository.get_by_id(task_id, user_id)
-        task.title = task_in.title
-        task.description = task_in.description
-        task.status = task_in.status
-        task.due_date = task_in.due_date
+    def update_task(self, task_id: int, user_id: int, task_in: TaskUpdate):
+        task = self._get_task_or_404(task_id, user_id)
+        update_data = task_in.model_dump(exclude_unset=True)
+        for key, value in update_data.items():
+            setattr(task, key, value)
         return self.repository.update(task)
 
     def delete_task(self, task_id: int, user_id: int):
-        task = self.repository.get_by_id(task_id, user_id)
+        task = self._get_task_or_404(task_id, user_id)
         return self.repository.delete(task)
 
-    def update_status(self, task_id: int, user_id: int, status: str):
-        task = self.repository.get_by_id(task_id, user_id)
+    def update_status(self, task_id: int, user_id: int, status: TaskStatus):
+        task = self._get_task_or_404(task_id, user_id)
         task.status = status
         return self.repository.update(task)

@@ -20,3 +20,14 @@ class TaskResponse(BaseModel):
     updated_at: datetime
 
     model_config = ConfigDict(from_attributes=True)
+
+
+class TaskUpdate(BaseModel):
+    title: str | None = Field(default=None, min_length=1, max_length=200)
+    description: str | None = None
+    status: TaskStatus | None = None
+    due_date: datetime | None = None
+
+
+class TaskUpdateStatus(BaseModel):
+    status: TaskStatus

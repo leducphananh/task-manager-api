@@ -15,3 +15,33 @@ Authorization: Bearer {{token}}
     "title": "Học FastAPI ver2",
     "description": "Làm bài tập quản lý Task với SQLAlchemy và JWT"
 }
+
+### Get task by id
+GET {{baseUrl}}/api/v1/tasks/1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### Update task
+PUT {{baseUrl}}/api/v1/tasks/1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "title": "Học FastAPI ver2 (Đã cập nhật)",
+    "description": "Cập nhật mô tả mới cho task",
+    "status": "in_progress"
+}
+
+### Update task status (PATCH)
+PATCH {{baseUrl}}/api/v1/tasks/1/status
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "status": "done"
+}
+
+### Delete task
+DELETE {{baseUrl}}/api/v1/tasks/1
+Content-Type: application/json
+Authorization: Bearer {{token}}

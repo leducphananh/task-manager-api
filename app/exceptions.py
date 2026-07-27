@@ -20,3 +20,8 @@ class InvalidCredentialsException(AppException):
 class InvalidTokenException(AppException):
     def __init__(self):
         super().__init__(status_code=401, message="Invalid or expired token")
+
+
+class TaskNotFoundException(AppException):
+    def __init__(self):
+        super().__init__(status_code=404, message="Task not found")

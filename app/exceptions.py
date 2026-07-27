@@ -15,3 +15,8 @@ class EmailAlreadyExistsException(AppException):
 class InvalidCredentialsException(AppException):
     def __init__(self):
         super().__init__(status_code=401, message="Invalid credentials")
+
+
+class InvalidTokenException(AppException):
+    def __init__(self):
+        super().__init__(status_code=401, message="Invalid or expired token")

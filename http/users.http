@@ -1,0 +1,6 @@
+@baseUrl = http://localhost:8000
+
+### Get me
+GET {{baseUrl}}/users/me
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZXhwIjoxNzg1MTI1MDY1fQ.3YDfeDl3_yQOGiijnwcb2_AXiS8-yKxY6WBMBqfkHho

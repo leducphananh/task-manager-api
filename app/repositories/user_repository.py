@@ -17,3 +17,7 @@ class UserRepository:
     def find_by_email(self, email: str):
         statement = select(User).where(User.email == email)
         return self.db.scalars(statement).first()
+
+    def find_by_id(self, id: int):
+        statement = select(User).where(User.id == id)
+        return self.db.scalars(statement).first()

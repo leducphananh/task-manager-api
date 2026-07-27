@@ -1,8 +1,10 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import DeclarativeBase, sessionmaker
 
+from app.core.config import settings
+
 DATABASE_URL = (
-    "postgresql://anhldp:123456@localhost:5432/task_manager"
+    settings.database_url
 )
 
 engine = create_engine(DATABASE_URL)

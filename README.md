@@ -73,3 +73,24 @@ pip install -r requirements.txt
 # Cập nhật lại file requirements.txt sau khi cài thêm thư viện mới
 pip freeze > requirements.txt
 ```
+
+---
+
+## 🐳 4. Khởi chạy với Docker Compose (Docker Commands)
+
+Khởi chạy song song cả database PostgreSQL và máy chủ API chỉ bằng 1 câu lệnh (tự động chạy migration khi khởi động):
+
+```bash
+# Khởi chạy toàn bộ hệ thống dưới nền (detached mode)
+docker compose up -d --build
+
+# Xem log trực tiếp của các container
+docker compose logs -f
+
+# Dừng và xóa toàn bộ container
+docker compose down
+
+# Dừng và xóa luôn cả volume dữ liệu của PostgreSQL
+docker compose down -v
+```
+

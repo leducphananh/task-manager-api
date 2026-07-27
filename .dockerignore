@@ -1,0 +1,22 @@
+# Git
+.git
+.gitignore
+
+# Python cache & venv
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+.eggs/
+
+# IDE & OS files
+.DS_Store
+.vscode/
+.idea/
+
+# Testing & Docs
+http/
+README.md

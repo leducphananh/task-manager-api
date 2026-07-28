@@ -76,3 +76,57 @@ def test_delete_task(task_repo, task_service, task_factory):
     deleted = task_service.delete_task(task_id=1, user_id=1)
     assert deleted.id == 1
     assert len(task_repo.tasks) == 0
+
+
+def test_get_task_by_id_with_redis_cache(task_repo, task_factory):
+    """Test cơ chế Cache-Aside với Redis: Lưu cache khi miss và trả về từ cache khi hit."""
+    from unittest.mock import MagicMock
+    from app.schemas.task import TaskResponse
+    from app.services.task_service import TaskService
+
+    mock_redis = MagicMock()
+    # Lần 1: giả lập miss cache (get_model trả về None)
+    mock_redis.get_model.return_value = None
+
+    service_with_cache = TaskService(repository=task_repo, redis=mock_redis)
+    task_repo.tasks.append(task_factory(id=50, user_id=1, title="Super Cached Task"))
+
+    # Lần 1 gọi: sẽ lấy từ repository và lưu vào cache
+    res1 = service_with_cache.get_task_by_id(task_id=50, user_id=1)
+    assert res1.title == "Super Cached Task"
+    mock_redis.get_model.assert_called_once_with("task:1:50", TaskResponse)
+    mock_redis.set.assert_called_once()
+
+    # Lần 2 giả lập hit cache: get_model trả về chính object vừa cache
+    mock_redis.get_model.return_value = res1
+    res2 = service_with_cache.get_task_by_id(task_id=50, user_id=1)
+    assert res2.title == "Super Cached Task"
+    assert mock_redis.get_model.call_count == 2
+
+
+def test_get_tasks_with_redis_cache(task_repo, task_factory):
+    """Test cơ chế Cache-Aside cho danh sách task (get_tasks)."""
+    from unittest.mock import MagicMock
+    from app.schemas.task import TaskQuery
+    from app.services.task_service import TaskService
+
+    mock_redis = MagicMock()
+    mock_redis.get_model.return_value = None  # Lần 1: miss cache
+
+    service_with_cache = TaskService(repository=task_repo, redis=mock_redis)
+    task_repo.tasks.append(task_factory(id=101, user_id=1, title="List Cached Task"))
+
+    query = TaskQuery(page=1, page_size=10)
+    res1 = service_with_cache.get_tasks(user_id=1, query=query)
+    assert len(res1.items) == 1
+    assert res1.items[0].title == "List Cached Task"
+    mock_redis.get_model.assert_called_once()
+    mock_redis.set.assert_called_once()
+
+    # Lần 2 hit cache
+    mock_redis.get_model.return_value = res1
+    res2 = service_with_cache.get_tasks(user_id=1, query=query)
+    assert len(res2.items) == 1
+    assert mock_redis.get_model.call_count == 2
+
+

@@ -15,6 +15,7 @@ class TaskCreate(BaseModel):
 
 class TaskResponse(BaseModel):
     id: int
+    user_id: int
     title: str
     description: str | None
     status: TaskStatus

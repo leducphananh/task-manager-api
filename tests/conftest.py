@@ -38,8 +38,8 @@ def user_service(user_repo: FakeUserRepository) -> UserService:
 
 @pytest.fixture
 def task_service(task_repo: FakeTaskRepository) -> TaskService:
-    """Bơm task_repo vào TaskService."""
-    return TaskService(repository=task_repo)
+    """Bơm task_repo vào TaskService (với redis=None trong các test mặc định để cô lập hạ tầng)."""
+    return TaskService(repository=task_repo, redis=None)
 
 
 # ==========================================

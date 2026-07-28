@@ -1,5 +1,5 @@
 @baseUrl = http://localhost:8000
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZXhwIjoxNzg1MjEwNjgwfQ.0AFCVpTLJ24QVkEIxmqG4ZNuySKpgPfphNd15eylWwU
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZXhwIjoxNzg1MjI2NzQ5fQ.0YH2XbFzZ5gzrpXZr4h80w8euTBQAIJHWGqxXT0ieR4
 
 ### 1. Get all tasks (Mặc định: page=1, page_size=10, sort_by=created_at, order=desc)
 GET {{baseUrl}}/api/v1/tasks?page=1&page_size=5
@@ -22,7 +22,7 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-    "title": "Học FastAPI",
+    "title": "Học FastAPI 16",
     "description": "Làm bài tập quản lý Task với SQLAlchemy và JWT"
 }
 

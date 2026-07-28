@@ -1,5 +1,6 @@
 from datetime import datetime
 from typing import List, Optional
+from unittest.mock import patch
 
 import pytest
 
@@ -96,3 +97,65 @@ def test_login_invalid_password():
     # Kiểm tra service phải ném ra ngoại lệ InvalidCredentialsException
     with pytest.raises(InvalidCredentialsException):
         service.login(login_req)
+
+
+def test_login_success_with_monkeypatch(monkeypatch):
+    """Minh họa cách Mock verify_password bằng công cụ monkeypatch của pytest."""
+    repo = FakeUserRepository()
+
+    # Lưu ý: Không cần hash mật khẩu thật tốn thời gian, chỉ cần một chuỗi giả
+    user = User(
+        id=1,
+        name="Test",
+        email="test@test.com",
+        password_hash="fake_hashed_string",
+        created_at=datetime.now(),
+        updated_at=datetime.now(),
+    )
+    repo.users.append(user)
+
+    service = UserService(repository=repo)
+
+    # Dùng monkeypatch để thay thế hàm verify_password tại nơi nó được sử dụng (user_service)
+    # bằng một hàm lambda luôn trả về True
+    monkeypatch.setattr(
+        "app.services.user_service.verify_password", lambda plain, hashed: True)
+
+    login_req = LoginRequest(email="test@test.com", password="any_password")
+    result = service.login(login_req)
+
+    assert "access_token" in result
+    assert result["token_type"] == "bearer"
+
+
+def test_login_success_with_unittest_mock():
+    """Minh họa cách Mock verify_password bằng thư viện chuẩn unittest.mock."""
+    repo = FakeUserRepository()
+
+    user = User(
+        id=1,
+        name="Test",
+        email="test@test.com",
+        password_hash="fake_hashed_string",
+        created_at=datetime.now(),
+        updated_at=datetime.now(),
+    )
+    repo.users.append(user)
+
+    service = UserService(repository=repo)
+
+    # Dùng context manager patch() của unittest.mock
+    with patch("app.services.user_service.verify_password") as mock_verify:
+        mock_verify.return_value = True  # Thiết lập khi gọi hàm thì trả về True
+
+        login_req = LoginRequest(
+            email="test@test.com", password="any_password")
+        result = service.login(login_req)
+
+        # Kiểm tra token
+        assert "access_token" in result
+        assert result["token_type"] == "bearer"
+        # Quyền năng của unittest.mock: Kiểm tra hàm verify_password có thực sự được gọi đúng 1 lần
+        # và đúng với tham số truyền vào hay không!
+        mock_verify.assert_called_once_with(
+            "any_password", "fake_hashed_string")

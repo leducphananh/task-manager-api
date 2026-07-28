@@ -20,3 +20,6 @@ __pycache__/
 # Testing & Docs
 http/
 README.md
+tests/
+.pytest_cache/
+pytest.ini

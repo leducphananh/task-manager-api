@@ -14,7 +14,7 @@ POST {{baseUrl}}/api/v1/auth/register
 Content-Type: application/json
 
 {
-    "name": "Test 3",
-    "email": "test3@example.com",
+    "name": "Test 7",
+    "email": "test7@example.com",
     "password": "12345678"
 }

@@ -1,9 +1,9 @@
-from fastapi import APIRouter, BackgroundTasks
+from fastapi import APIRouter
 
-from app.dependencies.notifications import NotificationServiceDep
 from app.dependencies.users import UserServiceDep
 from app.schemas.user import (LoginRequest, TokenResponse, UserCreate,
                               UserResponse)
+from app.tasks.email_tasks import send_welcome_email
 
 router = APIRouter(
     prefix="/auth",
@@ -14,15 +14,10 @@ router = APIRouter(
 @router.post("/register", response_model=UserResponse)
 async def register(
     service: UserServiceDep,
-    notification_service: NotificationServiceDep,
-    background_tasks: BackgroundTasks,
     user: UserCreate,
 ):
     created_user = service.register(user)
-    background_tasks.add_task(
-        notification_service.send_welcome_notification,
-        created_user.email,
-    )
+    send_welcome_email.delay(created_user.email)
     return created_user
 
 

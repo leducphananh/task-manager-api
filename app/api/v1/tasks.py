@@ -1,15 +1,12 @@
 from typing import List
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 
 from app.dependencies.auth import CurrentUserDep
 from app.dependencies.tasks import TaskServiceDep
-from app.schemas.task import (
-    TaskCreate,
-    TaskResponse,
-    TaskUpdate,
-    TaskUpdateStatus,
-)
+from app.schemas.common import PaginationResponse
+from app.schemas.task import (TaskCreate, TaskQuery, TaskResponse, TaskUpdate,
+                              TaskUpdateStatus)
 
 router = APIRouter(
     prefix="/tasks",
@@ -17,9 +14,13 @@ router = APIRouter(
 )
 
 
-@router.get("/", response_model=List[TaskResponse])
-async def get_all_tasks(current_user: CurrentUserDep, task_service: TaskServiceDep):
-    return task_service.get_tasks(current_user.id)
+@router.get("/", response_model=PaginationResponse[TaskResponse])
+async def get_all_tasks(
+    current_user: CurrentUserDep,
+    task_service: TaskServiceDep,
+    query: TaskQuery = Depends(),
+):
+    return task_service.get_tasks(current_user.id, query)
 
 
 @router.post("/", response_model=TaskResponse)

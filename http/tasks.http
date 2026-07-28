@@ -1,12 +1,22 @@
 @baseUrl = http://localhost:8000
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZXhwIjoxNzg1MjA4NzEzfQ.O5gxNk0eJZqwH4DltOa56MEs7tvY4CN61uyKCQGW86g
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZXhwIjoxNzg1MjEwNjgwfQ.0AFCVpTLJ24QVkEIxmqG4ZNuySKpgPfphNd15eylWwU
 
-### Get all tasks
-GET {{baseUrl}}/api/v1/tasks
+### 1. Get all tasks (Mặc định: page=1, page_size=10, sort_by=created_at, order=desc)
+GET {{baseUrl}}/api/v1/tasks?page=1&page_size=5
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
-### Create task
+### 2. Get tasks lọc theo trạng thái (status: todo, in_progress, done)
+GET {{baseUrl}}/api/v1/tasks?status=todo&page=1&page_size=5
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### 3. Get tasks tìm kiếm theo từ khóa và sắp xếp tăng dần
+GET {{baseUrl}}/api/v1/tasks?keyword=FastAPI&sort_by=title&order=asc
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### 4. Create task
 POST {{baseUrl}}/api/v1/tasks
 Content-Type: application/json
 Authorization: Bearer {{token}}
@@ -16,12 +26,12 @@ Authorization: Bearer {{token}}
     "description": "Làm bài tập quản lý Task với SQLAlchemy và JWT"
 }
 
-### Get task by id
+### 5. Get task by id
 GET {{baseUrl}}/api/v1/tasks/1
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
-### Update task
+### 6. Update task
 PUT {{baseUrl}}/api/v1/tasks/1
 Content-Type: application/json
 Authorization: Bearer {{token}}
@@ -32,7 +42,7 @@ Authorization: Bearer {{token}}
     "status": "in_progress"
 }
 
-### Update task status (PATCH)
+### 7. Update task status (PATCH)
 PATCH {{baseUrl}}/api/v1/tasks/1/status
 Content-Type: application/json
 Authorization: Bearer {{token}}
@@ -41,7 +51,7 @@ Authorization: Bearer {{token}}
     "status": "done"
 }
 
-### Delete task
+### 8. Delete task
 DELETE {{baseUrl}}/api/v1/tasks/1
 Content-Type: application/json
 Authorization: Bearer {{token}}

@@ -2,7 +2,7 @@ import pytest
 
 from app.exceptions import TaskNotFoundException
 from app.models.task import TaskStatus
-from app.schemas.task import TaskCreate, TaskUpdate
+from app.schemas.task import TaskCreate, TaskQuery, TaskUpdate
 
 
 def test_create_task(task_service):
@@ -26,9 +26,11 @@ def test_get_tasks(task_repo, task_service, task_factory):
     task_repo.tasks.append(task_factory(
         id=3, user_id=2, title="Other User Task"))
 
-    user_1_tasks = task_service.get_tasks(user_id=1)
-    assert len(user_1_tasks) == 2
-    assert all(t.user_id == 1 for t in user_1_tasks)
+    query = TaskQuery(page=1, page_size=10)
+    result = task_service.get_tasks(user_id=1, query=query)
+    assert result.total == 2
+    assert len(result.items) == 2
+    assert all(t.user_id == 1 for t in result.items)
 
 
 def test_get_task_by_id_success(task_repo, task_service, task_factory):

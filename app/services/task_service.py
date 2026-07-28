@@ -1,7 +1,8 @@
 from app.exceptions import TaskNotFoundException
 from app.models.task import Task, TaskStatus
 from app.repositories.task_repository import TaskRepository
-from app.schemas.task import TaskCreate, TaskUpdate
+from app.schemas.common import PaginationResponse
+from app.schemas.task import TaskCreate, TaskQuery, TaskUpdate
 
 
 class TaskService:
@@ -24,8 +25,17 @@ class TaskService:
         )
         return self.repository.create(new_task)
 
-    def get_tasks(self, user_id: int):
-        return self.repository.get_all_by_user_id(user_id)
+    def get_tasks(self, user_id: int, query: TaskQuery):
+        items, total = self.repository.get_all_by_user_id(user_id, query)
+        total_pages = (total + query.page_size -
+                       1) // query.page_size if query.page_size > 0 else 0
+        return PaginationResponse(
+            items=items,
+            page=query.page,
+            page_size=query.page_size,
+            total=total,
+            total_pages=total_pages,
+        )
 
     def get_task_by_id(self, task_id: int, user_id: int):
         return self._get_task_or_404(task_id, user_id)

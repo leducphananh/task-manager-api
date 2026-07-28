@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import Any, List, Optional
 
 from app.models.task import Task
 from app.models.user import User  # Đảm bảo SQLAlchemy nhận diện relationship
@@ -22,8 +22,15 @@ class FakeTaskRepository:
                 return t
         return None
 
-    def get_all_by_user_id(self, user_id: int) -> List[Task]:
-        return [t for t in self.tasks if t.user_id == user_id]
+    def get_all_by_user_id(self, user_id: int, query: Optional[Any] = None) -> tuple[List[Task], int]:
+        tasks = [t for t in self.tasks if t.user_id == user_id]
+        if query and getattr(query, "status", None):
+            tasks = [t for t in tasks if t.status == query.status]
+        if query and getattr(query, "keyword", None):
+            kw = query.keyword.lower()
+            tasks = [t for t in tasks if kw in t.title.lower() or (
+                t.description and kw in t.description.lower())]
+        return tasks, len(tasks)
 
     def update(self, task: Task) -> Task:
         for i, t in enumerate(self.tasks):

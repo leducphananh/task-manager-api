@@ -73,3 +73,32 @@ def test_login_success_with_unittest_mock(user_repo, user_service, user_factory)
         assert result["token_type"] == "bearer"
         mock_verify.assert_called_once_with(
             "any_password", "fake_hashed_string")
+
+
+def test_register_success(user_repo):
+    """Test đăng ký user thành công trong UserService."""
+    from app.schemas.user import UserCreate
+    from app.services.user_service import UserService
+
+    service = UserService(repository=user_repo)
+    req = UserCreate(name="New User", email="new@test.com",
+                     password="password123")
+
+    user = service.register(req)
+    assert user.id is not None
+    assert user.email == "new@test.com"
+
+
+def test_register_duplicate_email(user_repo, user_factory):
+    """Test báo lỗi khi đăng ký email đã tồn tại."""
+    from app.exceptions import EmailAlreadyExistsException
+    from app.schemas.user import UserCreate
+    from app.services.user_service import UserService
+
+    user_repo.users.append(user_factory(id=1, email="exist@test.com"))
+    service = UserService(repository=user_repo)
+    req = UserCreate(name="Another", email="exist@test.com",
+                     password="password123")
+
+    with pytest.raises(EmailAlreadyExistsException):
+        service.register(req)

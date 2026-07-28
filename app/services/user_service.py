@@ -21,9 +21,11 @@ class UserService:
         new_user = User(
             name=user.name,
             email=user.email,
-            password_hash=hashed_password
+            password_hash=hashed_password,
         )
-        return self.repository.create(new_user)
+        created_user = self.repository.create(new_user)
+
+        return created_user
 
     def login(self, login: LoginRequest):
         user = self.repository.find_by_email(login.email)

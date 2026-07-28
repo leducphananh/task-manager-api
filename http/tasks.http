@@ -1,5 +1,5 @@
 @baseUrl = http://localhost:8000
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZXhwIjoxNzg1MTI4NTAzfQ.oyu285s48jbAuvuy3zS_l4qcXRNTvN30_3SxfOWPkTY
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZXhwIjoxNzg1MjA4NzEzfQ.O5gxNk0eJZqwH4DltOa56MEs7tvY4CN61uyKCQGW86g
 
 ### Get all tasks
 GET {{baseUrl}}/api/v1/tasks
@@ -12,7 +12,7 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-    "title": "Học FastAPI ver2",
+    "title": "Học FastAPI",
     "description": "Làm bài tập quản lý Task với SQLAlchemy và JWT"
 }
 

@@ -45,6 +45,17 @@ def test_get_task_by_id_not_found(task_service):
         task_service.get_task_by_id(task_id=999, user_id=1)
 
 
+def test_get_task_by_id_unauthorized_user(task_repo, task_service, task_factory):
+    """Test khi task_id tồn tại nhưng thuộc sở hữu của user khác -> Phải ném ngoại lệ TaskNotFoundException."""
+    # Tạo task số 100 thuộc sở hữu của User 2
+    task_repo.tasks.append(task_factory(
+        id=100, user_id=2, title="Private Task of User 2"))
+
+    # User 1 cố gắng lấy thông tin Task 100
+    with pytest.raises(TaskNotFoundException):
+        task_service.get_task_by_id(task_id=100, user_id=1)
+
+
 def test_update_task(task_repo, task_service, task_factory):
     task = task_factory(id=1, user_id=1, title="Old Title",
                         status=TaskStatus.TODO)
